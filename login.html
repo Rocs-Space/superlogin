@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Password Security Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #e5e7eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #020617;
+            padding: 25px;
+            border-radius: 10px;
+            width: 380px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            background: #2563eb;
+            color: white;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .rules {
+            font-size: 13px;
+            margin-top: 15px;
+        }
+
+        .rules p {
+            margin: 4px 0;
+        }
+
+        .valid {
+            color: #22c55e;
+        }
+
+        .invalid {
+            color: #ef4444;
+        }
+
+        .status {
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Password Security  </h2>
+
+    <input type="password" id="password" placeholder="Enter password" >
+    <button type="button" id="togglePassword" aria-label="Show password">Show</button>
+    <button onclick="checkPassword()">Check Strength</button>
+    <button onclick="generatePassword()">Generate Strong Password</button>
+
+    <div class="rules">
+        <p id="length" class="invalid">• At least 12 characters</p>
+        <p id="upper" class="invalid">• Uppercase letter</p>
+        <p id="lower" class="invalid">• Lowercase letter</p>
+        <p id="number" class="invalid">• Number</p>
+        <p id="symbol" class="invalid">• Symbol</p>
+    </div>
+    <div class="password-field">
+  
+</div>
+
+    <div id="status" class="status"></div>
+</div>
+
+<script>
+    function checkPassword() {
+        const password = document.getElementById("password").value;
+
+        const lengthRule = password.length >= 12;
+        const upperRule = /[A-Z]/.test(password);
+        const lowerRule = /[a-z]/.test(password);
+        const numberRule = /[0-9]/.test(password);
+        const symbolRule = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        updateRule("length", lengthRule);
+        updateRule("upper", upperRule);
+        updateRule("lower", lowerRule);
+        updateRule("number", numberRule);
+        updateRule("symbol", symbolRule);
+
+        const status = document.getElementById("status");
+
+        if (lengthRule && upperRule && lowerRule && numberRule && symbolRule) {
+            status.textContent = "✅ Strong password accepted";
+            status.style.color = "#22c55e";
+        } else {
+            status.textContent = "❌ Weak password blocked";
+            status.style.color = "#ef4444";
+        }
+    }
+ function setupPasswordToggle(inputId, buttonId) {
+  const input = document.getElementById(inputId);
+  const button = document.getElementById(buttonId);
+
+  button.addEventListener("click", () => {
+    const isHidden = input.type === "password";
+    input.type = isHidden ? "text" : "password";
+    button.textContent = isHidden ? "Hide" : "Show";
+  });
+}
+
+// call the function
+setupPasswordToggle("password", "togglePassword");
+
+    function updateRule(id, isValid) {
+        const element = document.getElementById(id);
+        element.className = isValid ? "valid" : "invalid";
+    }
+
+    function generatePassword() {
+        const chars =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+            "abcdefghijklmnopqrstuvwxyz" +
+            "0123456789" +
+            "!@#$%^&*()_+{}[]<>?";
+
+        let password = "";
+        for (let i = 0; i < 16; i++) {
+            password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+
+        document.getElementById("password").value = password;
+        checkPassword();
+    }
+</script>
+
+</body>
+</html>
